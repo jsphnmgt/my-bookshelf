@@ -12,5 +12,15 @@
 
 export default function BookList({ books }) {
   // TODO: map the books to <li> items, or show the empty state.
+  // if (books.length === 0) {
+  //   return <p>No books yet</p>
+  // }
+  // return(
+  //   <ul>
+  //     (books.map(book => (
+
+  //     )))
+  //   </ul>
+  // )
   return null
 }

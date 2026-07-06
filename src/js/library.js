@@ -11,10 +11,14 @@
 export class Book {
   constructor(title, author, pages) {
     // TODO  (set this.title, this.author, this.pages)
+    this.title = title
+    this.author = author
+    this.pages = pages
   }
 
   summary() {
     // TODO  (return the string shown above, built from this.* )
+    return `${this.title} by ${this.author} (${this.pages} pages)`
   }
 }
 
@@ -26,10 +30,14 @@ export class Book {
 export class RatedBook extends Book {
   constructor(title, author, pages, rating) {
     // TODO  (call super(...) first, then set this.rating)
+    super(title, author, pages)
+    this.rating = rating
   }
 
   summary() {
     // TODO  (reuse super.summary() and append ` - rated ${rating}/5`)
+    // return `super.summary(- rated ${rating}/5)`
+    return (`${super.summary()} - rated ${this.rating}/5`)
   }
 }
 
@@ -42,18 +50,22 @@ export class RatedBook extends Book {
 export class Shelf {
   constructor() {
     // TODO  (start with an empty books array on the instance)
+    this.books = []
   }
 
   add(book) {
     // TODO  (push the book onto the array)
+    this.books.push(book)
   }
 
   get size() {
     // TODO  (return how many books are on the shelf)
+    return this.books.length
   }
 
   byAuthor(author) {
     // TODO  (return an array of the books whose author matches)
+    return this.books.filter(n => n.author === author)
   }
 }
 
@@ -64,6 +76,10 @@ export class Shelf {
 //   await fetchBook(9, { 1: {title:'Dune'} })  ->  throws Error('No book with id 9')
 export async function fetchBook(id, db) {
   // TODO  (async + throw new Error(...) when missing)
+  const book = db[id]
+  if (!Book) {
+    throw new Error(`No Book with id ${id}`)
+  } return book
 }
 
 // Try to fetch the book; if fetchBook throws, catch it and return null instead
@@ -72,4 +88,9 @@ export async function fetchBook(id, db) {
 //   await safeFetch(9, { 1: {title:'Dune'} })  ->  null
 export async function safeFetch(id, db) {
   // TODO  (try / catch around await fetchBook)
+  try {
+    return await fetchBook(id, db)
+  } catch {
+    return null
+  }
 }

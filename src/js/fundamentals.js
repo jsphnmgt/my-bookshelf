@@ -31,6 +31,7 @@ export function titleCase(title) {
 //   isLongTitle('Six chars', 5)                      ->  true
 export function isLongTitle(title, max = 20) {
   // TODO  (default parameter + comparison)
+  return title.length > max
 }
 
 // Return the total number of pages across all books.
@@ -38,6 +39,7 @@ export function isLongTitle(title, max = 20) {
 //   totalPages([])                            ->  0
 export function totalPages(books) {
   // TODO  (array reduce)
+  return books.reduce((sum, n) => sum + n, 0)
 }
 
 // Return an array of the titles of only the finished books, in order.
@@ -51,6 +53,7 @@ export function finishedTitles(books) {
 //   findByTitle([{title:'Dune'}], 'Nope')   ->  undefined
 export function findByTitle(books, title) {
   // TODO  (array find)
+  // return books.find(m => m === title)
 }
 
 // Return the average page count, rounded to the nearest whole number. Return 0
@@ -74,6 +77,11 @@ export function addTag(book, tag) {
 //   const next = makeCounter(); next() -> 1; next() -> 2
 export function makeCounter() {
   // TODO  (closure)
+  let count = 0
+  return () => {
+    count = count + 1
+    return n
+  }
 }
 
 // Group the book titles by author. Return an object mapping each author to an
@@ -83,4 +91,11 @@ export function makeCounter() {
 //   ])  ->  { X: ['A', 'C'], Y: ['B'] }
 export function groupByAuthor(books) {
   // TODO  (reduce into an object)
+  // return books.reduce((grouped, books) => (
+  //   if (!grouped[book.author]) {
+  //     grouped[book.author] = [];
+  //   } 
+  //   grouped[book.author].push(book.title)
+  //   return grouped
+  // ), })
 }

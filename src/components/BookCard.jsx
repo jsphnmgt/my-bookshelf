@@ -14,5 +14,10 @@
 
 export default function BookCard({ title, author, finished }) {
   // TODO: return the card markup described above.
-  return null
+  return (
+    <div>
+      <h2>{title}</h2>
+      <author>{author}</author>
+    </div>
+  )
 }
