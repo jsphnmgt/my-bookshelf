@@ -1,0 +1,123 @@
+name: Autograde
+
+# Runs the test suite on every push so graders (and you) see a pass/fail at a
+# glance, then builds your app and publishes a screenshot of it. The screenshot
+# is pushed to a separate "previews" branch (a timestamped folder per run) and
+# linked from the run summary, so your working branch is never touched and there
+# is nothing to git pull. Works on private repos; no Pages needed.
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write # lets the preview step push to the previews branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run tests
+        id: tests
+        run: npx vitest run --reporter=default --reporter=json --outputFile=test-results.json
+
+      # ---- App preview (never affects the grade) --------------------------
+      - name: Build the app
+        if: always()
+        id: build
+        continue-on-error: true
+        run: npm run build
+
+      - name: Install browser for preview
+        if: ${{ always() && steps.build.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          npm i -D playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+
+      - name: Render app screenshot
+        if: ${{ always() && steps.build.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          TS=$(date -u +%Y-%m-%dT%H-%M-%SZ)
+          echo "TS=$TS" >> "$GITHUB_ENV"
+          npx vite preview --port 4173 &
+          SERVER_PID=$!
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:4173/ >/dev/null && break
+            sleep 1
+          done
+          mkdir -p "submission/$TS"
+          cat > shot.mjs <<'EOF'
+          import { chromium } from 'playwright'
+          import { writeFileSync } from 'node:fs'
+          const ts = process.argv[2]
+          const browser = await chromium.launch()
+          const page = await browser.newPage({ viewport: { width: 1024, height: 800 } })
+          await page.goto('http://localhost:4173/', { waitUntil: 'networkidle', timeout: 15000 }).catch(() => {})
+          await page.screenshot({ path: `submission/${ts}/app.png`, fullPage: true })
+          await browser.close()
+          writeFileSync(`submission/${ts}/README.md`, `# App preview - ${ts}\n\n![app](./app.png)\n`)
+          EOF
+          node shot.mjs "$TS" || true
+          kill $SERVER_PID 2>/dev/null || true
+
+      - name: Publish preview to previews branch
+        if: ${{ always() && env.TS != '' }}
+        continue-on-error: true
+        run: |
+          [ -d "submission/$TS" ] || exit 0
+          git config user.name "course-bot"
+          git config user.email "course-bot@users.noreply.github.com"
+          WT="$RUNNER_TEMP/previews"
+          git fetch origin previews 2>/dev/null || true
+          if git show-ref --verify --quiet refs/remotes/origin/previews; then
+            git worktree add "$WT" -B previews origin/previews
+          else
+            git worktree add --detach "$WT" HEAD
+            git -C "$WT" checkout --orphan previews
+            git -C "$WT" rm -rf . >/dev/null 2>&1 || true
+          fi
+          mkdir -p "$WT/submission"
+          cp -r "submission/$TS" "$WT/submission/$TS"
+          git -C "$WT" add submission
+          git -C "$WT" diff --cached --quiet && { echo "no preview change"; exit 0; }
+          git -C "$WT" commit -m "📸 App preview $TS [skip ci]"
+          git -C "$WT" push origin previews
+
+      - name: Write grading summary
+        if: always()
+        run: |
+          node <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('fs');
+          let r;
+          try { r = JSON.parse(fs.readFileSync('test-results.json', 'utf8')); }
+          catch { console.log('## ❌ Tests did not run (build/install error)'); process.exit(0); }
+
+          const tests = r.testResults.flatMap(f => f.assertionResults);
+          const passed = tests.filter(t => t.status === 'passed').length;
+          const total = tests.length;
+
+          console.log(`## ${passed === total ? '✅' : '❌'} ${passed} / ${total} tests passed`);
+          console.log('');
+          console.log('| Result | Test |');
+          console.log('| --- | --- |');
+          for (const t of tests) {
+            const icon = t.status === 'passed' ? '✅' : '❌';
+            console.log(`| ${icon} | ${t.fullName || t.title} |`);
+          }
+          const ts = process.env.TS;
+          if (ts) {
+            const url = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/blob/previews/submission/${ts}/README.md`;
+            console.log('');
+            console.log(`📸 **App preview:** [view screenshot (${ts})](${url})`);
+          }
+          EOF
