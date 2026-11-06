@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Lato:wght@400;500&display=swap');
+
+:root {
+  --bg-dark: #1A1410;
+  --bg-panel: #241C14;
+  --bg-card: #2E2318;
+  --border-wood: #4A3520;
+  --border-gold: #7A6030;
+  --text-parchment: #E8D9B0;
+  --text-muted: #8A7A5A;
+  --text-gold: #C8A84B;
+  --accent-amber: #D4862A;
+  --accent-red: #8B3A2A;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Lato', system-ui, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-parchment);
+  overflow-x: hidden;
+}
+
+.wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.header {
+  background-color: var(--bg-panel);
+  border-bottom: 2px solid var(--border-wood);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.6rem;
+  color: var(--text-gold);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--text-parchment);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 3px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav a:hover {
+  background-color: var(--border-wood);
+  color: var(--text-gold);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pageSection {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-wood);
+  border-top: 2px solid var(--border-gold);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+}
+
+.pageSection h2 {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.2rem;
+  color: var(--text-gold);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-wood);
+  font-style: italic;
+}
+
+input, button, label {
+  font-family: 'Lato', system-ui, sans-serif;
+}
+
+input[type="text"],
+input:not([type]) {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-wood);
+  border-radius: 3px;
+  color: var(--text-parchment);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input:not([type]):focus {
+  outline: none;
+  border-color: var(--border-gold);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+button {
+  background-color: var(--bg-card);
+  color: var(--text-parchment);
+  border: 1px solid var(--border-gold);
+  border-radius: 3px;
+  padding: 0.4rem 1rem;
+  cursor: default;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: var(--border-wood);
+  color: var(--text-gold);
+}
+
+p, li {
+  color: var(--text-parchment);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-wood);
+  color: var(--text-parchment);
+}
+
+ul li:last-child {
+  border-bottom: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+form label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .nav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .wrapper {
+    padding: 0 0.75rem 2rem;
+  }
+
+  .pageSection {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .nav a {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .pageSection {
+    padding: 0.75rem;
+  }
+
+  input[type="text"], button {
+    font-size: 0.85rem;
+  }
+}

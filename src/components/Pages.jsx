@@ -1,35 +1,28 @@
-// ───────────────────────────────────────────────────────────────────────────
-// PART 10 - Routing: show a page based on the URL  (Module 2)
-// ───────────────────────────────────────────────────────────────────────────
-//
-// A router swaps which component renders based on the URL, so it feels like
-// separate pages while staying one app. Use react-router-dom (already
-// installed).
-//
-// Export (named) three things (use an <h2> for the page headings - the single
-// <h1> belongs to the app title in App.jsx):
-//   - Home  : a component with a heading whose text is exactly  Welcome
-//   - About : a component with a heading whose text is exactly  About
-//   - AppRoutes : a component that defines the routes with <Routes>/<Route>:
-//       path "/"      -> <Home />
-//       path "/about" -> <About />
-//
-// AppRoutes does NOT create its own <BrowserRouter>; the app (or the test)
-// provides the router around it.
-
 import { Routes, Route } from 'react-router-dom'
 
 export function Home() {
-  // TODO: an <h2> heading "Welcome"
-  return null
+  return (
+    <>
+      <h2>Welcome</h2>
+      <p>Start building your collection: add books and watch the shelf grow.</p>
+    </>
+  )
 }
 
 export function About() {
-  // TODO: an <h2> heading "About"
-  return null
+  return (
+    <>
+      <h2>About</h2>
+      <p>Use this app to track your books and see them appear on a virtual shelf.</p>
+    </>
+  )
 }
 
 export function AppRoutes() {
-  // TODO: <Routes> with a <Route> for "/" and one for "/about"
-  return null
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+    </Routes>
+  )
 }

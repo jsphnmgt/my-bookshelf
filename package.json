@@ -1,5 +1,5 @@
 {
-  "name": "module-3-activity-3-bookshelf-quiz",
+  "name": "my-bookshelf",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -24,6 +24,6 @@
     "vite": "^5.4.8",
     "vitest": "^2.1.1"
   },
-  "author": "Tjakoen Stolk",
-  "license": "MIT"
+  "license": "MIT",
+  "description": "A personal bookshelf with a responsive virtual shelf."
 }
