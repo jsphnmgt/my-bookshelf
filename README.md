@@ -1,7 +1,5 @@
 # My Bookshelf
 
-[GitHub repository](https://github.com/jsphnmgt/my-bookshelf)
-
 A React app for adding books to a personal collection and displaying them on a responsive virtual shelf. Includes Home and About pages and a wood-and-parchment theme.
 
 Originally developed as a course project for 6APSI at Holy Angel University, using a provided starter template to practice JavaScript, React, and styling.
